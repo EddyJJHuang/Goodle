@@ -123,29 +123,7 @@ const Home = () => {
         </div>
       </section>
 
-       <section className="py-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-12">Trusted by Pet Owners Everywhere</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div className="p-4">
-                    <div className="text-4xl font-extrabold text-primary mb-2">10k+</div>
-                    <div className="text-gray-500 font-medium">Happy Matches</div>
-                </div>
-                <div className="p-4">
-                    <div className="text-4xl font-extrabold text-secondary mb-2">500+</div>
-                    <div className="text-gray-500 font-medium">Lost Pets Found</div>
-                </div>
-                <div className="p-4">
-                    <div className="text-4xl font-extrabold text-green-500 mb-2">2k+</div>
-                    <div className="text-gray-500 font-medium">Adoptions</div>
-                </div>
-                <div className="p-4">
-                    <div className="text-4xl font-extrabold text-purple-500 mb-2">50k+</div>
-                    <div className="text-gray-500 font-medium">Active Profiles</div>
-                </div>
-            </div>
-        </div>
-      </section>
+
     </div>
   );
 };
