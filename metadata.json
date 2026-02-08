@@ -1,0 +1,7 @@
+{
+  "name": "Goodle",
+  "description": "The all-in-one platform for pet lovers. Match, find, adopt, and connect.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
