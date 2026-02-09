@@ -3,7 +3,7 @@ from __future__ import annotations
 import tempfile
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 from pydantic import BaseModel, Field, model_validator
@@ -22,8 +22,8 @@ class LocationInput(BaseModel):
 
 class AnalyzePhotoRequest(BaseModel):
     pet_id: str = Field(min_length=1)
-    image_base64: str | None = None
-    image_path: str | None = None
+    image_base64: Optional[str] = None
+    image_path: Optional[str] = None
 
     @model_validator(mode="after")
     def _validate_source(self) -> "AnalyzePhotoRequest":
@@ -40,10 +40,10 @@ class AnalyzeVideoRequest(BaseModel):
 
 class StrayReportCreateRequest(BaseModel):
     report_id: str = Field(min_length=1)
-    image_base64: str | None = None
-    image_path: str | None = None
-    reported_at: datetime | None = None
-    location: LocationInput | None = None
+    image_base64: Optional[str] = None
+    image_path: Optional[str] = None
+    reported_at: Optional[datetime] = None
+    location: Optional[LocationInput] = None
 
     @model_validator(mode="after")
     def _validate_source(self) -> "StrayReportCreateRequest":
@@ -54,10 +54,10 @@ class StrayReportCreateRequest(BaseModel):
 
 class CandidateReportInput(BaseModel):
     report_id: str = Field(min_length=1)
-    image_base64: str | None = None
-    image_path: str | None = None
-    reported_at: datetime | None = None
-    location: LocationInput | None = None
+    image_base64: Optional[str] = None
+    image_path: Optional[str] = None
+    reported_at: Optional[datetime] = None
+    location: Optional[LocationInput] = None
 
     @model_validator(mode="after")
     def _validate_source(self) -> "CandidateReportInput":
@@ -67,16 +67,16 @@ class CandidateReportInput(BaseModel):
 
 
 class MatchLostDogRequest(BaseModel):
-    owner_id: str | None = None
-    notice_image_base64: str | None = None
-    notice_image_path: str | None = None
-    lost_at: datetime | None = None
-    location: LocationInput | None = None
+    owner_id: Optional[str] = None
+    notice_image_base64: Optional[str] = None
+    notice_image_path: Optional[str] = None
+    lost_at: Optional[datetime] = None
+    location: Optional[LocationInput] = None
     use_db_reports: bool = True
     candidate_reports: list[CandidateReportInput] = Field(default_factory=list)
-    similarity_threshold: float | None = Field(default=None, ge=0, le=100)
-    max_distance_km: float | None = Field(default=None, ge=0)
-    max_time_gap_hours: int | None = Field(default=None, ge=0)
+    similarity_threshold: Optional[float] = Field(default=None, ge=0, le=100)
+    max_distance_km: Optional[float] = Field(default=None, ge=0)
+    max_time_gap_hours: Optional[int] = Field(default=None, ge=0)
 
     @model_validator(mode="after")
     def _validate_source(self) -> "MatchLostDogRequest":
@@ -85,13 +85,13 @@ class MatchLostDogRequest(BaseModel):
         return self
 
 
-def _location(value: LocationInput | None) -> GeoLocation | None:
+def _location(value: Optional[LocationInput]) -> Optional[GeoLocation]:
     if value is None:
         return None
     return GeoLocation(latitude=value.latitude, longitude=value.longitude)
 
 
-def _tmp_suffix(filename: str | None, fallback: str) -> str:
+def _tmp_suffix(filename: Optional[str], fallback: str) -> str:
     if filename:
         ext = Path(filename).suffix
         if ext:

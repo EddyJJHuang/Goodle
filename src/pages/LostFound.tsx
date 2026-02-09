@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Plus, Minus, AlertCircle } from 'lucide-react';
+import { Search, MapPin, Plus, Minus, AlertCircle, X, ChevronRight } from 'lucide-react';
 import { mockMapMarkers } from '../services/mockData';
+import LostPetMatcher from '../components/ai/LostPetMatcher';
+import { MatchLostDogResult } from '../types/ai';
 
 const LostFound = () => {
-  const [selectedMarker, setSelectedMarker] = useState<string | null>('m1');
+  const [selectedMarker, setSelectedMarker] = useState<string | null>(null);
+  const [showMatcher, setShowMatcher] = useState(false);
+  const [matchResult, setMatchResult] = useState<MatchLostDogResult | null>(null);
+
+  const handleMatchFound = (result: MatchLostDogResult) => {
+      setMatchResult(result);
+      setShowMatcher(false); // Close matcher to show results
+  };
 
   return (
     <div className="flex-1 relative overflow-hidden h-[calc(100vh-64px)] bg-gray-200">
@@ -20,44 +29,106 @@ const LostFound = () => {
         </div>
 
         {/* Map UI Overlay - Search */}
-        <div className="absolute top-6 left-6 z-10 w-80 max-w-[calc(100vw-3rem)]">
-            <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 p-4 space-y-5">
-                <div className="relative">
-                    <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-                    <input type="text" placeholder="Search location or breed..." className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-                </div>
-                <div className="space-y-2">
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Show On Map</label>
-                    <div className="flex flex-col space-y-2">
-                         <label className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
-                            <input type="checkbox" defaultChecked className="text-primary rounded border-gray-300 focus:ring-primary h-4 w-4" />
-                            <div className="flex items-center space-x-2">
-                                <span className="w-3 h-3 bg-primary rounded-full"></span>
-                                <span className="text-sm font-medium text-gray-700">Stray Reports</span>
+        <div className="absolute top-6 left-6 z-10 w-80 max-w-[calc(100vw-3rem)] pointer-events-none">
+            <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 p-4 space-y-5 pointer-events-auto">
+                {!matchResult ? (
+                    <>
+                        <div className="relative">
+                            <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+                            <input type="text" placeholder="Search location or breed..." className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                        </div>
+                        
+                        <div className="pt-2 border-t border-gray-100">
+                             <button 
+                                onClick={() => setShowMatcher(true)}
+                                className="w-full bg-orange-50 text-orange-600 hover:bg-orange-100 border border-orange-200 rounded-lg py-3 px-4 flex items-center justify-center gap-2 font-medium transition-colors"
+                             >
+                                <Search size={18} />
+                                Find by Photo (AI)
+                             </button>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Show On Map</label>
+                            <div className="flex flex-col space-y-2">
+                                 <label className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
+                                    <input type="checkbox" defaultChecked className="text-primary rounded border-gray-300 focus:ring-primary h-4 w-4" />
+                                    <div className="flex items-center space-x-2">
+                                        <span className="w-3 h-3 bg-primary rounded-full"></span>
+                                        <span className="text-sm font-medium text-gray-700">Stray Reports</span>
+                                    </div>
+                                </label>
+                                <label className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
+                                    <input type="checkbox" defaultChecked className="text-secondary rounded border-gray-300 focus:ring-secondary h-4 w-4" />
+                                    <div className="flex items-center space-x-2">
+                                        <span className="w-3 h-3 bg-secondary rounded-full"></span>
+                                        <span className="text-sm font-medium text-gray-700">Lost Pet Announcements</span>
+                                    </div>
+                                </label>
                             </div>
-                        </label>
-                        <label className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
-                            <input type="checkbox" defaultChecked className="text-secondary rounded border-gray-300 focus:ring-secondary h-4 w-4" />
-                            <div className="flex items-center space-x-2">
-                                <span className="w-3 h-3 bg-secondary rounded-full"></span>
-                                <span className="text-sm font-medium text-gray-700">Lost Pet Announcements</span>
+                        </div>
+                    </>
+                ) : (
+                    <div className="animate-in fade-in slide-in-from-left-4">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-bold text-gray-900">AI Search Results</h3>
+                            <button onClick={() => setMatchResult(null)} className="text-gray-400 hover:text-gray-600"><X size={18}/></button>
+                        </div>
+                        
+                        <div className="bg-orange-50 border border-orange-100 rounded-lg p-3 mb-4">
+                            <div className="flex items-center gap-2 text-orange-800 font-medium mb-1">
+                                <Search size={16} />
+                                {matchResult.is_match ? 'Potential Match Found!' : 'No High Confidence Match'}
                             </div>
-                        </label>
+                            <p className="text-xs text-orange-700">
+                                Similarity Score: {(matchResult.similarity_score * 100).toFixed(1)}%
+                            </p>
+                        </div>
+
+                        {matchResult.matched_report_ids.length > 0 ? (
+                            <div className="space-y-3">
+                                <p className="text-xs text-gray-500 font-medium uppercase">Matched Reports</p>
+                                {matchResult.matched_report_ids.map(id => (
+                                    <div key={id} className="bg-white border border-gray-200 rounded-lg p-2 flex gap-3 hover:border-primary cursor-pointer transition-colors">
+                                        <div className="w-12 h-12 bg-gray-200 rounded-md flex-shrink-0 overflow-hidden">
+                                             <img src="https://images.unsplash.com/photo-1544175287-e467232a3f14?auto=format&fit=crop&q=80&w=150" alt="Match" className="w-full h-full object-cover" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-gray-900 truncate">Report #{id.substring(0, 8)}</p>
+                                            <p className="text-xs text-gray-500">2km away • 2h ago</p>
+                                        </div>
+                                        <ChevronRight size={16} className="text-gray-400 self-center" />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-gray-500 text-sm">
+                                <p>No matching stray reports found yet.</p>
+                                <button className="mt-2 text-primary hover:underline" onClick={() => setMatchResult(null)}>Try another photo</button>
+                            </div>
+                        )}
                     </div>
-                </div>
-                <div className="space-y-2">
-                     <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Time Range</label>
-                     <div className="flex bg-gray-100 p-1 rounded-lg">
-                        <button className="flex-1 py-1.5 px-2 text-xs font-medium rounded-md shadow-sm bg-white text-gray-900">24h</button>
-                        <button className="flex-1 py-1.5 px-2 text-xs font-medium rounded-md text-gray-500 hover:text-gray-900">3 Days</button>
-                        <button className="flex-1 py-1.5 px-2 text-xs font-medium rounded-md text-gray-500 hover:text-gray-900">7 Days</button>
-                     </div>
-                </div>
+                )}
             </div>
         </div>
 
-        {/* Markers */}
-        {mockMapMarkers.map((marker) => (
+        {/* AI Matcher Modal Overlay */}
+        {showMatcher && (
+            <div className="absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+                <div className="w-full max-w-lg relative">
+                    <button 
+                        onClick={() => setShowMatcher(false)}
+                        className="absolute -top-12 right-0 text-white hover:text-gray-200 transition-colors"
+                    >
+                        <X size={24} />
+                    </button>
+                    <LostPetMatcher onMatchFound={handleMatchFound} />
+                </div>
+            </div>
+        )}
+
+        {/* Markers (Demo) */}
+        {!matchResult && mockMapMarkers.map((marker) => (
              <div 
                 key={marker.id} 
                 className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group z-10 transition-all hover:scale-110 hover:z-20"
