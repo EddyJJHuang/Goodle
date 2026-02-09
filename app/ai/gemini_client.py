@@ -116,8 +116,8 @@ class GeminiClient:
             raise ValueError("Missing Gemini API key. Set GEMINI_API_KEY or pass api_key.")
 
         self._backend = self._init_backend(key)
-        self.image_model = image_model or os.getenv("GEMINI_IMAGE_MODEL", "gemini-3.0-flash")
-        self.video_model = video_model or os.getenv("GEMINI_VIDEO_MODEL", "gemini-3.0-pro")
+        self.image_model = image_model or os.getenv("GEMINI_IMAGE_MODEL", "gemini-2.5-flash")
+        self.video_model = video_model or os.getenv("GEMINI_VIDEO_MODEL", "gemini-2.5-flash")
         self.default_temperature = default_temperature
         self.upload_timeout_seconds = upload_timeout_seconds
         self.upload_poll_interval_seconds = upload_poll_interval_seconds
