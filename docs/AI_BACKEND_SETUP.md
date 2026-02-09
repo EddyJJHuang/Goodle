@@ -29,8 +29,8 @@ For real Gemini calls:
 
 ```bash
 set GEMINI_API_KEY=your_key_here
-set GEMINI_IMAGE_MODEL=gemini-2.5-flash
-set GEMINI_VIDEO_MODEL=gemini-2.5-flash
+set GEMINI_IMAGE_MODEL=gemini-3-flash-preview
+set GEMINI_VIDEO_MODEL=gemini-3-flash-preview
 ```
 
 ## 3. Run backend
