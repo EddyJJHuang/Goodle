@@ -1,22 +1,64 @@
-# Dependencies
+# Node.js
 node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 
-# Env (含 API Key，勿提交)
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+backend/.venv/
+
+# Environment Variables (do not commit API keys)
 .env
 .env.local
 .env.*.local
 backend/.env
 
-# Build
-dist/
-
-# Backend
-backend/.venv/
-backend/uploads/
+# Database
+*.db
+*.sqlite3
+*.sqlite
 backend/*.db
 backend/goodle.db
 
-# IDE / OS
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
-*.pyc
-__pycache__/
+Thumbs.db
+
+# Project Specific
+backend/uploads/
+uploads/
+coverage/
+.pytest_cache/
