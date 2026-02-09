@@ -9,9 +9,15 @@ Everyone Googles for information, but who Goodles for love? Introducing Goodleâ€
 - **`src/context`**: Global state (e.g., `AuthContext` for user session).
 
 ### Environment Variables
-Configure your `.env` file with:
+Create a local env file (gitignored) from the template:
+```bash
+copy .env.local.example .env.local
+```
+
+Then set:
 ```bash
 VITE_API_BASE_URL=http://localhost:3000/api
+GEMINI_API_KEY=your_gemini_key_here
 ```
 
 ### Authentication

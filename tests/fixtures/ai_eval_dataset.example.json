@@ -1,0 +1,34 @@
+{
+  "photo_eval": [
+    {
+      "image_path": "tests/fixtures/eval/photos/dog_001.jpg",
+      "expected_size": "medium",
+      "expected_age_group": "adult",
+      "required_breed_keywords": ["samoyed"],
+      "required_tags": ["long_coat"],
+      "required_tag_groups": [
+        ["white", "pure_white_coat", "cream"]
+      ]
+    }
+  ],
+  "video_eval": [
+    {
+      "video_path": "tests/fixtures/eval/videos/dog_001.mp4",
+      "preprocess_seconds": 10,
+      "expected_activity_level": 7.0,
+      "expected_approach_speed": 6.0
+    }
+  ],
+  "match_eval": [
+    {
+      "notice_image_path": "tests/fixtures/eval/match/notice_001.jpg",
+      "candidate_image_path": "tests/fixtures/eval/match/candidate_001.jpg",
+      "expected_is_match": true
+    },
+    {
+      "notice_image_path": "tests/fixtures/eval/match/notice_001.jpg",
+      "candidate_image_path": "tests/fixtures/eval/match/candidate_002.jpg",
+      "expected_is_match": false
+    }
+  ]
+}

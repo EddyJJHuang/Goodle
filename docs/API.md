@@ -82,3 +82,89 @@ interface ApiResponse<T> {
 - **Endpoint**: `POST /pets`
 - **Body**: Pet object (without ID).
 - **Response**: Created Pet object.
+
+---
+
+## AI Service
+
+### 1. Analyze Pet Photo (Feature 1a)
+- **Endpoint**: `POST /ai/analyze-photo`
+- **Body**:
+  ```json
+  {
+    "pet_id": "pet_123",
+    "image_base64": "data:image/jpeg;base64,..."
+  }
+  ```
+  or
+  ```json
+  {
+    "pet_id": "pet_123",
+    "image_path": "C:/tmp/dog.jpg"
+  }
+  ```
+- **Response (`data`)**:
+  ```json
+  {
+    "breed": "mixed (labrador + border collie)",
+    "size": "medium",
+    "age_group": "adult",
+    "appearance_tags": ["short_coat", "black_white"],
+    "personality_guess": "friendly and energetic"
+  }
+  ```
+- **Persistence**: Writes JSON into `pets.aitags`.
+
+### 2. Analyze Pet Video (Feature 1b)
+- **Endpoint**: `POST /ai/analyze-video`
+- **Body**:
+  ```json
+  {
+    "pet_id": "pet_123",
+    "video_path": "C:/tmp/dog-social.mp4",
+    "preprocess_seconds": 10
+  }
+  ```
+- **Response (`data`)**:
+  ```json
+  {
+    "activity_level": 7.2,
+    "approach_speed": 6.8,
+    "emotional_stability": 7.9,
+    "play_preference": "chase",
+    "body_language_score": 7.1
+  }
+  ```
+- **Persistence**: Inserts into `pet_dynamic_info`.
+
+### 3. Match Lost Dog (Feature 2b)
+- **Endpoint**: `POST /ai/match-lost-dog`
+- **Body**:
+  ```json
+  {
+    "owner_id": "owner_001",
+    "notice_image_base64": "data:image/jpeg;base64,...",
+    "lost_at": "2026-02-09T10:00:00",
+    "location": { "latitude": 31.23, "longitude": 121.47 },
+    "use_db_reports": true
+  }
+  ```
+- **Response (`data`)**:
+  ```json
+  {
+    "is_match": true,
+    "similarity_score": 82.5,
+    "matched_report_ids": ["rep_101", "rep_102"],
+    "candidate_count": 12
+  }
+  ```
+- **Behavior**:
+  - Candidate set = DB reports + request candidate reports.
+  - Spatiotemporal filter: distance and time window.
+  - Similarity threshold default: 70.
+  - If matched and `owner_id` exists, notification is persisted.
+
+### 4. Support Endpoints
+- `POST /ai/stray-reports`: upsert stray report candidates.
+- `GET /ai/stray-reports`: list candidate reports.
+- `GET /ai/notifications`: list match notifications.
