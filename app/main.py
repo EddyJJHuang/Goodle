@@ -106,6 +106,11 @@ def create_app() -> FastAPI:
     async def unhandled_exception_handler(_: Request, exc: Exception) -> JSONResponse:
         return JSONResponse(status_code=500, content=api_error(message=str(exc), code=500))
 
+    # ✅ 兼容你之前习惯访问根路径
+    @app.get("/")
+    def read_root() -> dict[str, Any]:
+        return {"message": "Goodle Backend API", "docs": f"{settings.api_prefix}/docs"}
+
     @app.get(f"{settings.api_prefix}/health")
     def health() -> dict[str, Any]:
         return api_success({"status": "ok", "mock_mode": settings.mock_mode})
