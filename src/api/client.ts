@@ -13,7 +13,10 @@ const client: AxiosInstance = axios.create({
 // Request Interceptor
 client.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // TODO: Add token to headers if available
+    // When body is FormData, do not set Content-Type so the browser sets multipart/form-data; boundary=...
+    if (config.data instanceof FormData && config.headers) {
+      delete config.headers['Content-Type'];
+    }
     const token = localStorage.getItem('token');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;

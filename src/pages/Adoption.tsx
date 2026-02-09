@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Search, MapPin, ArrowRight, Heart } from 'lucide-react';
 import { mockPets } from '../services/mockData';
+import { petsService } from '../api/services/pets';
+import { Pet } from '../types';
 
 const Adoption = () => {
-  const adoptablePets = mockPets.filter(p => p.status === 'Available');
+  const [pets, setPets] = useState<Pet[]>([]);
+  useEffect(() => {
+    petsService.getPets({ status: 'Available' }).then((res) => {
+      const data = (res as { data?: { items?: Pet[] } })?.data;
+      const items = data?.items;
+      if (Array.isArray(items) && items.length >= 0) setPets(items);
+    }).catch(() => setPets(mockPets.filter(p => p.status === 'Available')));
+  }, []);
+  const adoptablePets = pets.length ? pets : mockPets.filter(p => p.status === 'Available');
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

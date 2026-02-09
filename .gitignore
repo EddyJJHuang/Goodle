@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Env (含 API Key，勿提交)
+.env
+.env.local
+.env.*.local
+backend/.env
+
+# Build
+dist/
+
+# Backend
+backend/.venv/
+backend/uploads/
+backend/*.db
+backend/goodle.db
+
+# IDE / OS
+.DS_Store
+*.pyc
+__pycache__/

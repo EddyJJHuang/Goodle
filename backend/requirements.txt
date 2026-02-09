@@ -1,0 +1,9 @@
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+python-multipart==0.0.17
+geopy==2.4.1
+aiosqlite==0.20.0
+pydantic==2.10.3
+sqlalchemy[asyncio]==2.0.36
+google-generativeai>=0.8.0
+python-dotenv>=1.0.0

@@ -82,3 +82,40 @@ interface ApiResponse<T> {
 - **Endpoint**: `POST /pets`
 - **Body**: Pet object (without ID).
 - **Response**: Created Pet object.
+
+---
+
+## 流浪狗上报 (Stray Report / Report Now)
+
+- **Endpoint**: `POST /api/stray-report`
+- **Body**: `multipart/form-data` — 照片 `photo`（可选）、文字描述 `description`、GPS 坐标 `lat`/`lng`、上报时间 `report_time`（ISO 或 datetime-local 格式）。服务端将坐标逆解析为地址（Geopy + Nominatim），照片存于 `uploads/stray/`。
+- **Response**: 创建记录，含 `address`（逆解析结果）。
+
+---
+
+## 寻狗发布 (Lost Dog)
+
+- **Endpoint**: `POST /api/lost-dog`
+- **Body**: `multipart/form-data` — 狗狗照片 `photo`（可选）、品种 `breed`、特征描述 `description`、走失时间 `lost_time`（ISO）、走失地点 `address`、GPS `lat`/`lng`（可选）、联系方式 `contact`。
+- **Response**: 创建记录，默认状态为待寻找（`pending`）。
+- **状态更新**: `PATCH /api/lost-dog/:id/status?status=found` — 已找到时更新为 `found`。
+
+---
+
+## 地图数据接口 (Map Data)
+
+用于地图标记点列表，支持**范围查询**（中心点 + 半径）与**时间过滤**（最近 N 天）。
+
+### 1. 获取流浪狗地图标记点
+- **Endpoint**: `GET /api/map/stray`
+- **Query Params**（均可选）:
+  - `lat` (float): 中心点纬度
+  - `lng` (float): 中心点经度
+  - `radius` (float): 半径（米），与 lat/lng 一起使用时只返回该范围内的数据
+  - `days` (int): 只返回最近 N 天的上报数据
+- **Response**: `data` 为数组，每项含 `id`, `description`, `lat`, `lng`, `address`, `report_time`, `photo_path` 等。
+
+### 2. 获取寻狗地图标记点
+- **Endpoint**: `GET /api/map/lost`
+- **Query Params**: 同 `/api/map/stray`（`lat`, `lng`, `radius`, `days`）
+- **Response**: `data` 为数组，每项含 `id`, `breed`, `description`, `lost_time`, `lat`, `lng`, `address`, `contact`, `photo_path`, `status` 等；仅含状态为待寻找的记录。
