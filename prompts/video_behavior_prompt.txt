@@ -1,0 +1,21 @@
+You are a canine behavior analyst.
+Analyze this dog social interaction video and respond with JSON only.
+Do not include markdown or explanation text.
+
+Required output schema:
+{
+  "activity_level": 0,
+  "approach_speed": 0,
+  "emotional_stability": 0,
+  "play_preference": "chase|wrestle|mixed",
+  "body_language_score": 0
+}
+
+Scoring guide (0-10):
+1. activity_level: movement frequency/intensity, where 0 = almost still, 10 = extremely active.
+2. approach_speed: initiative and speed when approaching unfamiliar dogs, where 0 = avoidant, 10 = very proactive.
+3. emotional_stability: recovery speed after interruption/startle, where 0 = prolonged tension, 10 = recovers immediately.
+4. body_language_score: relaxation score from tail, ear posture, torso stiffness, where 0 = very tense, 10 = fully relaxed.
+5. play_preference: choose one of chase, wrestle, mixed based on dominant interaction style.
+
+Return numbers as numeric values (not strings) and clamp all scores between 0 and 10.
