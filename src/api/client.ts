@@ -4,7 +4,7 @@ import { ApiResponse } from '../types/api';
 // Create Axios instance
 const client: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
-  timeout: 10000,
+  timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
   },

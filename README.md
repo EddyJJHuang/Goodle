@@ -29,34 +29,43 @@ The `AuthContext` automatically handles JWT storage and injection. Ensure your l
 }
 ```
 
+
 ## 🚀 Getting Started
 
 ### 1. Prerequisites
 - Node.js (v18+)
-- npm or yarn
+- Python 3.9+
+- Gemini API Key
 
 ### 2. Installation
+
+**Frontend:**
 ```bash
 npm install
 ```
 
-### 3. Run Frontend (Development)
+**Backend (Python):**
 ```bash
-npm run dev
-# Server will start at http://localhost:5173
+# Create and activate virtual environment (Python 3.9 recommended)
+/usr/bin/python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt -r requirements-backend.txt
 ```
 
----
+### 3. Running the Project (Requires 2 Terminals)
 
-## 🤝 Backend Development Guide
+**Terminal 1: Backend**
+```bash
+source .venv/bin/activate
+uvicorn app.main:app --reload --port 8001
+# Backend runs at http://localhost:8001
+```
 
-### 1. Project Setup
-- **Frontend Port**: 5173
-- **Backend Port**: 3000 (Expected)
-- **Proxy**: All requests to `/api/*` are automatically forwarded to `http://localhost:3000`.
+**Terminal 2: Frontend**
+```bash
+npm run dev
+# Frontend runs at http://localhost:5173
+```
 
-### 2. Where to write backend code?
-Please create a **new folder** (`backend/` or `server/`) in the root. Do not modify `src/`.
-
-### 3. API Contract
-Refer to [docs/API.md](docs/API.md) for the detailed API specification.
