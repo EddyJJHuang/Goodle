@@ -24,4 +24,4 @@ pnpm-debug.log*
 .idea/
 
 # TypeScript
-*.tsbuildinfo
+*.tsbuildinfonode_modules/
