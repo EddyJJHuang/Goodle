@@ -69,3 +69,34 @@ npm run dev
 # Frontend runs at http://localhost:5173
 ```
 
+
+## Probabilistic Long-Term Forecasting (New)
+
+A lightweight, model-agnostic forecasting extension now lives in `app/forecasting/`.
+It upgrades a point-forecasting backbone to:
+
+- multi-quantile forecasts (`[B, pred_len, D, Q]`)
+- split conformal interval calibration (horizon-wise and joint)
+- optional adaptive online conformal updates
+
+### Quick demo
+
+```bash
+python scripts/forecasting_example.py
+```
+
+### Example command patterns
+
+```bash
+# 1) Point forecasting only
+python scripts/forecasting_example.py
+
+# 2) Quantile forecasting without conformal
+python -c "from app.forecasting.pipeline import ForecastConfig; print(ForecastConfig(use_quantile_head=True, use_conformal=False))"
+
+# 3) Quantile + horizon-wise conformal
+python -c "from app.forecasting.pipeline import ForecastConfig; print(ForecastConfig(use_quantile_head=True, use_conformal=True, conformal_mode='horizon'))"
+
+# 4) Quantile + adaptive conformal
+python -c "from app.forecasting.pipeline import ForecastConfig; print(ForecastConfig(use_quantile_head=True, use_conformal=True, conformal_mode='horizon', adaptive_conformal=True))"
+```
